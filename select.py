@@ -121,5 +121,36 @@ class SigenSmartPortModeSelector(SelectEntity):
                 self._current_option = option
                 self.schedule_update_ha_state()
                 _LOGGER.info(f"Changed Sigen operational control mode context to: {option}")
+                self._logoff(token)
         except Exception as e:
             _LOGGER.error(f"Error handling mode selector patch transaction: {e}")
+
+    def _logoff(self, token):
+        """Perform Sigenergy logout after successful switch operation."""
+        logout_url = f"{self._base_url}/auth/token/logout"
+
+        headers = {
+            "accept": "*/*",
+            "accept-language": "en-US",
+            "auth-client-id": "sigen",
+            "authorization": f"bearer {token}",
+            "client-server": "aus",
+            "content-type": "application/json; charset=utf-8",
+            "lang": "en_US",
+            "origin": "https://app-aus.sigencloud.com",
+            "referer": "https://app-aus.sigencloud.com/",
+            "sg-bui": "1",
+            "sg-env": "1",
+            "sg-pkg": "sigen_app",
+            "sg-platform": "web",
+            "user-agent": self._user_agent
+        }
+
+        try:
+            res = requests.delete(logout_url, headers=headers, timeout=10)
+            if res.status_code == 200:
+                _LOGGER.info("Successfully logged off from Sigenergy API session.")
+            else:
+                _LOGGER.warning(f"Logout returned non-200 status: {res.status_code} - {res.text}")
+        except Exception as e:
+            _LOGGER.error(f"Error during logout request: {e}")
