@@ -61,10 +61,14 @@ username: Your account email.
 
 password: Copy the entire raw, encrypted Base64 string that follows password= (it will look like 2345fdfwregt323r==).
 
-station_id: Your 15-digit inverter station string (e.g., 1034555545453).
+station_id: Your 15-digit inverter station string (e.g., 1034555545453). Most recently found by typing "stationId" in the Filter box. It will be a value in many web request URLs.
+
+auth_header: Taken from request authorization header. Replace xxxxxxxxxxx in the configuration. (Authoization header will look like, Authorization: Basic c2lnZW46c2lnZW4=).
+
+user_device_id: Copy from userDeviceId in token payload (e.g., 1787462074480).
 
 Step 3: Configure configuration.yaml
-Open your main configuration.yaml file and add the configuration blocks for both the switch and select platforms. Supply your captured credentials:		
+Open your main configuration.yaml file in the /homeassistant directory and add the configuration blocks for both the switch and select platforms. Supply your captured credentials:		
 
 Step 4: Validate and Restart Home Assistant
 Because this component introduces a brand new domain architecture (select.py), Home Assistant must perform a clean boot to register the backend components.
